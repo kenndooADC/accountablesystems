@@ -1,4 +1,18 @@
-export default function Home() {
+async function getBills() {
+
+  const res = await fetch("/api/bills", {
+
+    cache: "no-store",
+
+  });
+
+  return res.json();
+
+}
+
+export default async function Home() {
+
+  const { data } = await getBills();
 
   return (
 
@@ -6,9 +20,23 @@ export default function Home() {
 
       <h1>AccountableSystems (ADC)</h1>
 
-      <p>AI-powered legislative tracking system is running.</p>
+      <h2>Live Bills</h2>
 
-      <p>Status: Frontend initialized</p>
+      {!data?.length && <p>No bills found</p>}
+
+      <ul>
+
+        {data?.map((bill: any) => (
+
+          <li key={bill.id}>
+
+            <strong>{bill.title}</strong> — {bill.state} ({bill.status})
+
+          </li>
+
+        ))}
+
+      </ul>
 
     </main>
 
