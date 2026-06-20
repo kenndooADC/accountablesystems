@@ -1,11 +1,23 @@
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+
+);
+
 export async function GET() {
 
-  return Response.json([
+  const { data, error } = await supabase.from("bills").select("*");
 
-    { id: 1, title: "Test Bill 1", state: "NY", status: "open" },
+  if (error) {
 
-    { id: 2, title: "Test Bill 2", state: "NJ", status: "paid" }
+    return Response.json({ error: error.message }, { status: 500 });
 
-  ]);
+  }
+
+  return Response.json(data);
 
 }
