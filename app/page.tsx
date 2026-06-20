@@ -1,12 +1,50 @@
-export default function Home() {
+async function getBills() {
+
+  const res = await fetch(
+
+    "https://accountablesystems.vercel.app/api/bills",
+
+    { cache: "no-store" }
+
+  );
+
+  if (!res.ok) {
+
+    return [];
+
+  }
+
+  return res.json();
+
+}
+
+export default async function Home() {
+
+  const data = await getBills();
 
   return (
 
-    <main>
+    <main style={{ padding: "20px", fontFamily: "Arial" }}>
 
-      <h1>AccountableSystems</h1>
+      <h1>Accountable Systems</h1>
 
-      <p>Deployment test successful.</p>
+      <h2>Live Bills</h2>
+
+      {!data?.length && <p>No bills found</p>}
+
+      <ul>
+
+        {data?.map((bill: any) => (
+
+          <li key={bill.id} style={{ marginBottom: "10px" }}>
+
+            <strong>{bill.Title}</strong> — {bill.State} ({bill.Status})
+
+          </li>
+
+        ))}
+
+      </ul>
 
     </main>
 
